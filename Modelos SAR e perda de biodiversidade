@@ -1,0 +1,68 @@
+rm(list=ls())
+####### Species Area Relantionship
+S=c*A^z
+
+####Riqueza estimada após perda de habitat
+S2=((A2/A1)^z)* S1
+
+#S2= riqueza depois da perda de habitat
+#S1= riqueza original
+#A1= Área original
+#A2=Area no tempo 2
+
+
+#carregar pacote
+require(sars)
+#carregar dados da ilhas de galapagos ( tamanho de ilha snumerio de espécies de plantas)
+data("galap")
+
+
+#Justra o modelo
+fit = sar_power(data= galap)
+summary(fit)
+plot(fit, ModTitle = "Modelos SAR", mmSep = FALSE)
+
+
+### Função para estimar a perda de espécies em função da perda de área
+Riq2 <- function(A1, A2, S1, z) {
+  S2 <- ((A2 / A1) ^ z) * S1
+  return(S2)
+}
+
+
+# Parametros
+A1 <- galap$a[1]  # area original 
+A2 <- 0.5   #  area no tempo 2
+S1 <- 48   # riqueza de espécies original
+z <- fit$par[2]   # grau de inclinação da reta SAR
+
+# Calcular o numero de especies com a perda de habitat
+Resu <-  Riq2(A1, A2, S1, z)
+
+#Resu <- sapply(original_areas, function(A1) Riq2(A1, A2, S1, z))
+
+# Resultados
+print(Resu)
+
+
+###proporção de espécies sobreviventes em função da proporçao de area
+prop.sp.sobreviventes <- function(A1, z, loss_percentages) {
+  surviving_proportions <- (1 - loss_percentages/100) ^ z
+  return(surviving_proportions)
+}
+
+# Example usage
+A1 <- galap$a  # Original area
+z <- fit$par[2]    # Slope of the species-area relationship
+loss <- seq(10, 100, by = 10)  # porcentagem de perda de área 10% to 100%
+
+prop <- prop.sp.sobreviventes(A1, z, loss)
+
+# Print the results
+print(prop*100)
+prop=prop*100
+
+#grafico
+plot(prop~loss, type="l",col="red",xlab="Perda de habitat",ylab="Proporção de sp sobreviventes", main="Extinções",lwd=3)
+
+
