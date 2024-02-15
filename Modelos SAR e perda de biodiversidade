@@ -26,6 +26,11 @@ par(mfrow=c(1,2))
 plot(fit, ModTitle = "Modelos SAR", mmSep = FALSE)
 
 
+#Prevendo a riqueza para ilhas maiores
+predicao=sar_pred(fit,area=c(1111,1233))
+predicao
+
+
 ### Função para estimar a perda de espécies em função da perda de área
 Riq2 <- function(A1, A2, S1, z) {
   S2 <- ((A2 / A1) ^ z) * S1
