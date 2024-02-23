@@ -1,9 +1,9 @@
 rm(list=ls())
-####### Species Area Relantionship
-S=c*A^z
+####### Relação espécie area como uma lei de potência
+#S=c*A^z
 
 ####Riqueza estimada após perda de habitat
-S2=((A2/A1)^z)* S1
+#S2=((A2/A1)^z)* S1
 
 #S2= riqueza depois da perda de habitat
 #S1= riqueza original
@@ -17,19 +17,20 @@ require(sars)
 data("galap")
 
 
-#Justra o modelo
+#Ajustar o modelo
 fit = sar_power(data= galap)
 summary(fit)
 
 #Grafico
-par(mfrow=c(1,2))
+Criar janelas para dois gráficos
+#par(mfrow=c(1,2))
+#plotar o grafico da Relação espécie-area
 plot(fit, ModTitle = "Relação Espécie- Área", mmSep = FALSE)
 
 
 #Prevendo a riqueza para ilhas maiores
 predicao=sar_pred(fit,area=c(1111,1233))
 predicao
-
 
 
 
