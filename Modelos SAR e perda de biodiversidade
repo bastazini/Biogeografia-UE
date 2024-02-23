@@ -23,12 +23,14 @@ summary(fit)
 
 #Grafico
 par(mfrow=c(1,2))
-plot(fit, ModTitle = "Modelos SAR", mmSep = FALSE)
+plot(fit, ModTitle = "Relação Espécie- Área", mmSep = FALSE)
 
 
 #Prevendo a riqueza para ilhas maiores
 predicao=sar_pred(fit,area=c(1111,1233))
 predicao
+
+
 
 
 ### Função para estimar a perda de espécies em função da perda de área
@@ -71,6 +73,6 @@ print(prop*100)
 prop=prop*100
 
 #grafico
-plot(prop~loss, type="l",col="red",xlab="Perda de habitat",ylab="Proporção de sp sobreviventes", main="Extinções",lwd=3)
+plot(prop~loss, type="l",col="red",xlab="Perda de habitat",ylab="Proporção de sp sobreviventes", main="Perda de espécies",lwd=3)
 
 
