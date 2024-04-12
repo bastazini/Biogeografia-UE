@@ -1,0 +1,48 @@
+library(shiny)
+library(ggplot2)
+
+# Definindo a UI
+ui <- fluidPage(
+  titlePanel("Modelo de Potência na Relação Espécie-Área"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("c", "Valor de c:", min = 0.1, max = 10, value = 1),
+      sliderInput("z", "Valor de z:", min = 0.1, max = 2, value = 0.5),
+      numericInput("area", "Área da região:", value = 100, min = 1),
+      numericInput("num_species", "Número de espécies:", value = 50, min = 1, max = 1000),
+      checkboxInput("loglog", "Transformar eixos em Log-Log"),
+      width = 3
+    ),
+    
+    mainPanel(
+      plotOutput("species_area_plot")
+    )
+  )
+)
+
+# Definindo o servidor
+server <- function(input, output) {
+  output$species_area_plot <- renderPlot({
+    # Gerando dados
+    area <- seq(1, input$area, length.out = 100)
+    species <- input$c * area^input$z
+    
+    # Criando o gráfico
+    p <- ggplot() +
+      geom_line(aes(x = area, y = species), color = "blue") +
+      geom_hline(yintercept = input$num_species, linetype = "dashed", color = "red") +
+      labs(x = "Área", y = "Espécies") +
+      theme_minimal()
+    
+    # Transformando os eixos em log-log, se selecionado
+    if (input$loglog) {
+      p <- p + scale_x_log10() + scale_y_log10()
+    }
+    
+    print(p)
+  })
+}
+
+# Executando o aplicativo
+shinyApp(ui = ui, server = server)
